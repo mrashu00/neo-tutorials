@@ -1,68 +1,84 @@
-# Integrating Wallet Connect in a Frontend Application
+Creating a Smart Contract on Neo X
 
 1. Introduction
 
-Learn to integrate Wallet Connect to enable user authentication and transactions in a React.js application.
+This tutorial will guide you through creating a smart contract on Neo X using the Neo blockchain platform.
 
 2. Prerequisites
 
-Node.js installed.
+Basic knowledge of programming in C# or Python.
 
-Basic knowledge of React.js.
+Install Neo Blockchain Toolkit.
 
-WalletConnect SDK.
-
-
-3. Setup the React Project
-
-1. Initialize the project:
-
-npx create-react-app neo-wallet-connect
-cd neo-wallet-connect
+Set up Neo Express and Visual Studio Code.
 
 
-2. Install dependencies:
+3. Setting Up the Environment
 
-npm install @walletconnect/client
-npm install neo-wallet-adapter-react
+1. Install .NET SDK:
 
-
-
-4. Implement WalletConnect
-
-1. Import WalletConnect:
-
-import WalletConnect from "@walletconnect/client";
-import QRCodeModal from "@walletconnect/qrcode-modal";
+sudo apt install dotnet-sdk-6.0
 
 
-2. Connect to Wallet:
+2. Install Neo Blockchain Toolkit:
 
-const connector = new WalletConnect({
-    bridge: "https://bridge.walletconnect.org",
-});
+dotnet tool install -g Neo.BlockchainToolkit
 
-if (!connector.connected) {
-    connector.createSession().then(() => {
-        QRCodeModal.open(connector.uri);
-    });
+
+3. Install Visual Studio Code and Neo extensions:
+
+Neo Smart Contract Debugger.
+
+Neo Blockchain Toolkit Extension.
+
+
+
+
+4. Writing the Smart Contract
+
+1. Create a new contract project:
+
+dotnet new neo-contract
+
+
+2. Open the contract file (Contract.cs):
+
+using Neo.SmartContract.Framework;
+using Neo.SmartContract.Framework.Services;
+
+namespace HelloWorld
+{
+    public class Contract : SmartContract
+    {
+        public static string Main(string name)
+        {
+            return $"Hello, {name}";
+        }
+    }
 }
 
 
-3. Handle Connection Events:
 
-connector.on("connect", (error, payload) => {
-    if (error) throw error;
-    console.log(payload);
-});
+5. Deploy the Contract
 
+1. Compile the contract:
 
-
-5. Test the Application
-
-1. Start the application:
-
-npm start
+dotnet build
 
 
-2. Scan the QR code with a compatible wallet and execute a sample transaction.
+2. Start Neo Express:
+
+neo-express start
+
+
+3. Deploy the contract:
+
+neo-express contract deploy Contract.nef
+
+
+
+6. Test the Contract
+
+1. Invoke the contract:
+
+neo-express contract invoke Contract --method Main --args ["World"]
